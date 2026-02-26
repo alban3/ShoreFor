@@ -112,7 +112,7 @@ print(b_opti, c_opti, phi_opti)
 
 (time_S, time_Sy, loc_init, loc_extra,
  time_F, dt, ii0, iif, vecind, same,
- XS, frag, hsf, tpf, power, fall_velocity) = reading_files(forcing_file,
+ XS, data_std, frag, hsf, tpf, power, fall_velocity) = reading_files(forcing_file,
                                                            shoreline_file,
                                                            time_initial,
                                                            time_final)

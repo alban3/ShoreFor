@@ -26,7 +26,7 @@ def loopw(b, c):
         try:
             with warnings.catch_warnings(record=True) as war:
                 warnings.simplefilter('always')
-                a = np.mean(b[c[0]-i:c[0]])
+                a = np.nanmean(b[c[0]-i:c[0]])
                 if any(issubclass(warn.category, RuntimeWarning) for warn in war):
                     raise RuntimeWarning
             break

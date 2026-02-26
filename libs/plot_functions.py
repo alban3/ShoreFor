@@ -22,7 +22,7 @@ def on_resize(event):
 
 
 def plot_calibration(time_shor, time_for, omega_for, vecind,
-                     omega_eq, shoreline, data, evolution, frag):
+                     omega_eq, shoreline, data, data_std, evolution, frag):
     """
     Plot the Dean parameter evolution in top of Figure.
     Below, plot of the shoreline or bar evolution
@@ -33,7 +33,7 @@ def plot_calibration(time_shor, time_for, omega_for, vecind,
     ## DEAN EVOLUTION
     # time_for_full = [_from_ordinal(t) for t in timef_full]
     # x1_datef = dates.date2num(time_for_full)
-    if isinstance(time_for[0], float):
+    if isinstance(time_for[0], np.float32):
         x1_dates = [_from_ordinal(t) for t in time_for]
         x1_dates_shor = x1_dates[vecind[0]:vecind[-1]+1]
         y1_omegaf = omega_for
@@ -88,7 +88,7 @@ def plot_calibration(time_shor, time_for, omega_for, vecind,
     ## SURVEY DATA
     rms_error = np.sqrt(np.nansum((data - np.mean(data))**2) / len(data))
     if evolution == 'shoreline':    
-        ax2.errorbar(x2_dates, y3_data, yerr=rms_error,
+        ax2.errorbar(x2_dates, y3_data, yerr=data_std,
                      ecolor='mediumseagreen', fmt='o', color='mediumseagreen',
                      markeredgecolor='green', capsize=5, zorder=1,
                      label='Shoreline data', alpha=1, elinewidth=4)

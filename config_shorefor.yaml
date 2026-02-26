@@ -13,8 +13,8 @@ case:
 ###############
 
 input_files:
-  shoreline_file: './examples/shoreline_duck_2000-2022.csv'
-  waves_file: './examples/forcing_duck_daily_8m_1990-2022.dat'
+  shoreline_file: './examples/shoreline1974-2025.nc'
+  waves_file: './examples/wave24h_buoy.nc'
 
 ################
 # Dakota setup #
@@ -22,11 +22,11 @@ input_files:
 
 # Optimization
 optimization:
-  dakota: 2 #1 if you want to use dakota / 2 if you already know the parameters
+  dakota: 1 #1 if you want to use dakota / 2 if you already know the parameters
   # If 2, set the parameters values:
-  b: -0.00305 
-  c: 0.0021 
-  phi: 189
+  b: -0.0094832783935 #-0.00305 
+  c: 0.030430181641 #0.0021 
+  phi: 322.29205096 #189
 
 dakota_params:
   # b in m/days
@@ -44,12 +44,12 @@ dakota_params:
 #######################
 
 calibration:
-  time_initial: '2000-02-01'
-  time_final: '2012-09-01'
+  time_initial: '2000-01-02'
+  time_final: '2006-12-30'
 
 future:
   # Extrapolate the shoreline ? 1: yes, 2: no
-  extrapolate: 2
+  extrapolate: 1
   # initial time for the extrapolation
-  begin_future_time: '2019-02-15'
-  final_future_time: '2020-12-06'
+  begin_future_time: '2019-01-01'
+  final_future_time: '2020-12-31'

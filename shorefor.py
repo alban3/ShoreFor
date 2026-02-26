@@ -39,7 +39,7 @@ opti_b, opti_c, opti_phi = optimization()
 
 (time_S, time_Sy, loc_init, loc_extra,
  time_F, dt, ii0, iif, vecind, same,
- XS, frag, hsf, tpf, power, fall_velocity) = reading_files(forcing_file,
+ XS, data_std, frag, hsf, tpf, power, fall_velocity) = reading_files(forcing_file,
                                                            shoreline_file,
                                                            time_initial,
                                                            time_final) #WARNING
@@ -73,7 +73,7 @@ fig1, (ax_1, ax_2) = plot_calibration(time_Sy,
                                       vec_ind_c,
                                       omega_eq,
                                       shoreline_calib,
-                                      XS,
+                                      XS, data_std,
                                       evolution,
                                       frag)
 

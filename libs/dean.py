@@ -30,7 +30,7 @@ def dean(hsf, tpf, fall_velocity, deltat, power, same, opti_phi, timef):
     vqq = np.flipud(vqq)
 
     for k in range(ddd+1, len(timef)):
-        omega_eq[k] = np.matmul(omegaf[(k-ddd-1):k], vqq)
+        omega_eq[k] = np.matmul(np.array(omegaf[(k-ddd-1):k]), vqq)
     omega_eq = omega_eq / deno
     delta_omega = omega_eq - omegaf
     sigma_domega = np.sqrt(np.nanmean((delta_omega
