@@ -10,6 +10,7 @@ Author: Alexandre Paris
 """
 
 import sys
+import os
 #import datetime
 #import subprocess
 #import yaml
@@ -28,6 +29,7 @@ from read_files import reading_files
 from dean import dean
 from shorecore import shorecore
 from plot_functions import plot_calibration, plot_future
+from save_results import save_results
 from configuration import config
 
 ###############################################################################
@@ -94,26 +96,21 @@ if future == True:
 
     plot_future(time_Sy, time_Fy_c, time_Fy_f, shoreline_future, XS, evolution, ax_1, ax_2)
 
+    # OUTPUT PART; TO DO    
+    general_time = time_Fy_c + time_Fy_f
+    # Fills series with NaN
+    calib_shoreline = shoreline_calib.tolist() + ['NaN']*len(time_Fy_f)
+    future_shoreline = ['NaN']*len(time_Fy_c) + shoreline_future.tolist()
+    vec_ind_c = vec_ind_c + vec_ind_f
+
+else:
+    general_time = time_Fy_c
+    calib_shoreline = shoreline_calib.tolist()
+    future_shoreline = ['NaN']*len(time_Fy_c)
+
+if os.path.isdir('results') == False:
+    os.system('mkdir results')
+
+save_results(general_time, calib_shoreline, future_shoreline, omega_F, omega_eq, vec_ind_c, time_Sy, XS, data_std, case_name, evolution, opti_b, opti_c, opti_phi)
+
 plt.show()
-
-# OUTPUT PART; TO DO    
-#    general_time = time_Fy_c + time_Fy_f
-#    # Fills series with NaN
-#    calib_shoreline = shoreline_calib.tolist() + ['NaN']*len(time_Fy_f)
-#    future_shoreline = ['NaN']*len(time_Fy_c) + shoreline_future.tolist()
-
-#else:
-#    general_time = time_Fy_c
-#    calib_shoreline = shoreline_calib.tolist()
-#    future_shoreline = ['NaN']*len(time_Fy_c)
-
-#general_time_num = [datenum(t) for t in general_time]
-#dict_results = {'time': general_time,
-#                'datenum': general_time_num,
-#                'calib_shoreline': calib_shoreline,
-#                'future_shoreline': future_shoreline}
-#results = pandas.DataFrame(dict([(k, pandas.Series(v)) for k, v in dict_results.items()]))
-#if os.path.isdir('results') == False:
-#    os.system('mkdir results')
-#results.to_csv('./results/results_shorefor_'+case_name+'_'+evolution
-#               +'_b'+str(opti_b)+'_c'+str(opti_c)+'_phi'+str(opti_phi)+'.csv', index=False)

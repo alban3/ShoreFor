@@ -32,7 +32,7 @@ def reading_files(file_forcing, file_shoreline, init_c, init_f):
     shoreline_ncFile = Dataset(file_shoreline)
     data = shoreline_ncFile.variables['s'][:]
     data_std = shoreline_ncFile.variables['sstd'][:]
-    times = shoreline_ncFile.variables['date'][:]
+    times = np.round(shoreline_ncFile.variables['date'][:],0)
     shoreline_ncFile.close()
     
     #shoreline_data = pandas.read_csv(file_shoreline, sep=' ')

@@ -1,0 +1,15 @@
+README ShoreFor runs
+
+Experiment : 2000-2006
+
+Configuration   
+run         branch      waves       							shoreline       					b       	c       	phi     r       RMSE        Comments
+Alexandre	main		forcing_duck_daily_8m_1990-2022.dat		shoreline_duck_2000-2022.csv		-0.002904	0.01024		330		0.29	9.1514		not similar to article but results ok
+AlexandreNC	develop		forcing_duck_daily_8m_1990-2022.nc		shoreline_duck_2000-2022.nc			-0.002904	0.01024		330		0.2896	9.1514		version develop identical to version main
+
+Al2			develop		forcing_duck_daily_8m_1990-2022.nc		shoreline1974-2025.nc				-0.009932	0.01044		313		0.2292	31.4708		wrong linear trend and peak oscillation too important
+Al3			develop		wave24h_buoy.nc							shoreline_duck_2000-2022.nc			-0.002904	0.01024		330		0.2929	7.1656		similar to Alexandre -> wave data ok maybe shoreline wrong
+Alban1		develop		wave24h_buoy.nc							shoreline_south1974-2025_filter.nc	+0.001960	0.00506		226		0.2838	6.6369		Coherent -> important limit
+
+
+

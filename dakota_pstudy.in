@@ -28,9 +28,9 @@ model
 
 variables
   continuous_design = 3
-    initial_point    0.0        0.1        350.0                                
-    lower_bounds    -0.01        0.01        300                                
-    upper_bounds    0.01        0.1        400                                
+    initial_point    0.0        0.1        250.0                                
+    lower_bounds    -0.01        0.005        200                                
+    upper_bounds    0.01        0.1        300                                
     descriptors       "b"     "c"      "phi"
 
 # Run Dakota in serial launching M=8 asynchronous local jobs, which each run in
