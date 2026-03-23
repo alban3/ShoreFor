@@ -12,7 +12,7 @@ Author: Alexandre Paris
 
 import pandas
 import numpy as np
-from tools import find_nearest, match
+from tools import find_nearest, find_nearest_above, find_nearest_below, match
 from dates_functions import _from_ordinal
 from constants import GAMMA, G, RHO, DEIL, NU, D50
 from netCDF4 import Dataset
@@ -26,6 +26,7 @@ def reading_files(file_forcing, file_shoreline, init_c, init_f):
     init_c: initial time of calibration in 7***** format
     init_f: initial time of extrapolation (future) in 7***** format
     """
+    
     #shoreline_data = np.loadtxt(file_shoreline, usecols=(0, 1))
     #shoreline_data = pandas.DataFrame(data=shoreline_data).replace('NaN', np.nan).dropna().to_numpy()
 
@@ -52,9 +53,9 @@ def reading_files(file_forcing, file_shoreline, init_c, init_f):
     time_shor = [_from_ordinal(times[i]).strftime('%Y-%m-%d %H:%M:%S')
                  for i in range(len(times))]
     # Find the position of initial times in time of data
-    nearest_init = find_nearest(np.asarray(times), value=init_c)
+    nearest_init = find_nearest_above(np.asarray(times), value=init_c)
     loc_init = np.where(times==nearest_init)
-    nearest_extra = find_nearest(np.asarray(times), value=init_f)
+    nearest_extra = find_nearest_below(np.asarray(times), value=init_f)
     loc_extra = np.where(times==nearest_extra)
 
     #data = shoreline_data[:, 1]

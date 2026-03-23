@@ -35,7 +35,7 @@ from configuration import config
 ###############################################################################
 
 (shoreline_file, forcing_file, future, tzero_fut,
- tfin_fut, time_initial, time_final, case_name, evolution) = config()
+ tfin_fut, time_initial, time_final, case_name, evolution, detrend_option) = config()
 
 opti_b, opti_c, opti_phi = optimization()
 
@@ -49,7 +49,7 @@ opti_b, opti_c, opti_phi = optimization()
 erosion_ratio, FF_mi, FF_pl, omega_F, omega_eq = dean(hsf, tpf,
                                                       fall_velocity,
                                                       dt, power, same,
-                                                      opti_phi, time_F)
+                                                      opti_phi, time_F, time_initial, time_final, detrend_option)
 
 shoreline_calib, time_Fy_c, vec_ind_c = shorecore(opti_b,
                                                   opti_c,
@@ -111,6 +111,6 @@ else:
 if os.path.isdir('results') == False:
     os.system('mkdir results')
 
-save_results(general_time, calib_shoreline, future_shoreline, omega_F, omega_eq, vec_ind_c, time_Sy, XS, data_std, case_name, evolution, opti_b, opti_c, opti_phi)
+save_results(general_time, calib_shoreline, future_shoreline, omega_F, omega_eq, vec_ind_c, time_Sy, XS, data_std, loc_init, loc_extra, case_name, evolution, opti_b, opti_c, opti_phi)
 
 plt.show()

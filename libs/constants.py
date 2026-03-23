@@ -9,4 +9,4 @@ G = 9.81  # standard gravity
 RHO = 1000  # density of water
 DEIL = 1.65
 NU = 0.000001  # kinetic viscosity of water
-D50 = 0.0003  # d50 diameter of sediments
+D50 = 0.00025  # d50 diameter of sediments

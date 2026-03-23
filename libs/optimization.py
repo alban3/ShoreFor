@@ -12,6 +12,7 @@ Author: Alexandre Paris
 import sys
 import yaml
 import subprocess
+import numpy as np
 
 
 def optimization():
@@ -28,12 +29,18 @@ def optimization():
             process.wait()
 
         # Best RMSE and BSS
-        with open('dakota_results.txt', 'r') as f:
+        '''with open('dakota_results.txt', 'r') as f:
             params = f.readlines()[5:8]
             bopti = float(params[0])
             copti = float(params[1])
-            phiopti = float(params[2])
-
+            phiopti = float(params[2])'''
+        data = np.genfromtxt('dakota_tabular.dat')
+        data = data[1:]
+        idx = np.argmin(data[:,-1])
+        bopti = data[idx, 2]
+        copti = data[idx, 3]
+        phiopti = data[idx, 4]
+		
         print('Otimized coefficients:\n')
         print('b: ', bopti)
         print('c: ', copti)

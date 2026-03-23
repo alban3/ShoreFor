@@ -91,48 +91,48 @@ def open_files():
     forcing_file = '.' + cl['input_files']['waves_file']
     time_initial = datenum(cl['calibration']['time_initial'])
     time_final = datenum(cl['calibration']['time_final'])
+    detrend_option = cl['option']['detrend']
     evol = cl['case']['evolution']
     if evol == 1:
         evolution = 'shoreline'
     elif evol == 2:
         evolution = 'bars'
-    return shoreline_file, forcing_file, time_initial, time_final, evolution 
+    return shoreline_file, forcing_file, time_initial, time_final, evolution, detrend_option
 
 
 ###############################################################################
 # Reading .dat files with forcing and shoreline data
-shoreline_file, forcing_file, time_initial, time_final, evolution = open_files()
+shoreline_file, forcing_file, time_initial, time_final, evolution, detrend_option = open_files()
 # Reading the parameters for the optimization
 inputs = np.loadtxt('parameters.txt')
 b_opti = inputs[2, 0]
 c_opti = inputs[2, 1]
 phi_opti = inputs[2, 2]
-
 print(b_opti, c_opti, phi_opti)
 
 (time_S, time_Sy, loc_init, loc_extra,
  time_F, dt, ii0, iif, vecind, same,
  XS, data_std, frag, hsf, tpf, power, fall_velocity) = reading_files(forcing_file,
-                                                           shoreline_file,
-                                                           time_initial,
-                                                           time_final)
+														   shoreline_file,
+														   time_initial,
+														   time_final)
 
 erosion_ratio, FF_mi, FF_pl, omega_F, omega_eq = dean(hsf, tpf, fall_velocity,
-                                                      dt, power, same,
-                                                      phi_opti, time_F)
+													  dt, power, same,
+													  phi_opti, time_F, time_initial, time_final, detrend_option)
 
 shoreline_calib, time_Fy_c, vec_ind_c = shorecore(b_opti,
-                                                  c_opti,
-                                                  erosion_ratio,
-                                                  FF_mi,
-                                                  FF_pl,
-                                                  time_F,
-                                                  time_S,
-                                                  dt,
-                                                  XS,
-                                                  evolution,
-                                                  tzero=time_initial,
-                                                  tfinal=time_final)
+												  c_opti,
+												  erosion_ratio,
+												  FF_mi,
+												  FF_pl,
+												  time_F,
+												  time_S,
+												  dt,
+												  XS,
+												  evolution,
+												  tzero=time_initial,
+												  tfinal=time_final)
 
 # Resize shoreline_calib to XS size
 # time_Fy_c shoreline_calib // time_S XS
@@ -157,5 +157,5 @@ RMSE = rmse(np.array(data), np.array(obs))
 #    f.write(repr(BSS) + '   BSS ')
 
 with open('results.txt', 'w') as f:
-    f.write(repr(RMSE) + '   RMSE \n')
-    #f.write(repr(BSS) + '   BSS ')
+	f.write(repr(RMSE) + '   RMSE \n')
+	#f.write(repr(BSS) + '   BSS ')

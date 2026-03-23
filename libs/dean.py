@@ -9,9 +9,10 @@ Author: Alexandre Paris
 """
 
 import numpy as np
+from scipy.signal import detrend
 
 
-def dean(hsf, tpf, fall_velocity, deltat, power, same, opti_phi, timef):
+def dean(hsf, tpf, fall_velocity, deltat, power, same, opti_phi, timef, time_init, time_fin, detrend_option):
     # Dean parameter calculated on forcing time
     with np.errstate(divide='ignore', invalid='ignore'):
         omegaf = hsf/(tpf*fall_velocity)
@@ -33,25 +34,36 @@ def dean(hsf, tpf, fall_velocity, deltat, power, same, opti_phi, timef):
         omega_eq[k] = np.matmul(np.array(omegaf[(k-ddd-1):k]), vqq)
     omega_eq = omega_eq / deno
     delta_omega = omega_eq - omegaf
-    sigma_domega = np.sqrt(np.nanmean((delta_omega
-                                       - np.nanmean(delta_omega))**2))
+    
+    ind0 = np.where(timef == time_init)[0][0]
+    indf = np.where(timef == time_fin)[0][0]
+    m = indf - ind0 + 1 #number of time simulation
+
+    sigma_domega = np.sqrt(np.nanmean((delta_omega[ind0:indf+1]
+                                       - np.nanmean(delta_omega[ind0:indf+1]))**2))
 
     # Calculate the 2nd term of the formulation for every time interval
-    fff = np.zeros(len(timef))
-    fff_plus = np.zeros(len(timef))
-    fff_minus = np.zeros(len(timef))
+    fff = np.zeros(m)
+    fff_plus = np.zeros(m)
+    fff_minus = np.zeros(m)
     # Forcing term, erosion or accretion
-    fff = delta_omega * np.sqrt(power) / sigma_domega
+    fff = delta_omega[ind0:indf+1] * np.sqrt(power[ind0:indf+1]) / sigma_domega
     fff_plus[fff > 0] = fff[fff > 0]
-    fff_minus[fff < 0] = fff[fff < 0]
+    fff_minus[fff <= 0] = fff[fff <= 0]
+    if detrend_option == 1:
+        fff_plus = detrend(fff_plus, type='linear') + np.nanmean(fff_plus)
+        fff_minus = detrend(fff_minus, type='linear') + np.nanmean(fff_minus)
+    else:
+        pass
+
     # Calculate mean value of fff_plus and fff_minus for every survey time interval
     indr = np.arange(same[0], same[-1]+1)
-    ratio_erosion = np.absolute(np.nansum(fff_plus[indr])
+    ratio_erosion = np.absolute(np.nansum(fff_plus)
                                 /
-                                np.nansum(fff_minus[indr]))
+                                np.nansum(fff_minus))
     print('erosion ratio', ratio_erosion)
     
-    mff_pl = np.zeros(len(timef))
+    '''mff_pl = np.zeros(len(timef))
     mff_mi = np.zeros(len(timef))
     for i in range(len(same)-1):
         m = same[i]
@@ -62,6 +74,6 @@ def dean(hsf, tpf, fall_velocity, deltat, power, same, opti_phi, timef):
             mff_mi[i] = fff_minus[n]*deltat
         else:
             mff_pl[i] = np.sum(fff_plus[m+1:n])*deltat
-            mff_mi[i] = np.sum(fff_minus[m+1:n])*deltat
+            mff_mi[i] = np.sum(fff_minus[m+1:n])*deltat'''
 
     return ratio_erosion, fff_minus, fff_plus, omegaf, omega_eq

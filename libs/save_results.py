@@ -10,20 +10,20 @@ import numpy as np
 from dates_functions import _from_ordinal, datenum
 from netCDF4 import Dataset
 
-def save_results(time_general, shoreline_calib, shoreline_future, dean_F, dean_eq, vec_ind_tot, time_survey, survey_shoreline, std, name_case, evolu, b, c, phi):
+def save_results(time_general, shoreline_calib, shoreline_future, dean_F, dean_eq, vec_ind_tot, time_survey, survey_shoreline, std, init_loc, extra_loc, name_case, evolu, b, c, phi):
 	
 	from dates_functions import datenum
 	from tools import match
 
 	general_time_num = [datenum(t) for t in time_general]
 	
-	idx = match(time_survey, time_general)
+	idx = match(time_survey[init_loc[0][0]:extra_loc[0][0]+1], time_general)
 	shoreline_obs, shoreline_std_obs = np.empty((2,len(time_general)))
 	
 	shoreline_obs.fill(np.nan)
 	shoreline_std_obs.fill(np.nan)
-	shoreline_obs[idx] = survey_shoreline
-	shoreline_std_obs[idx] = std
+	shoreline_obs[idx] = survey_shoreline[init_loc[0][0]:extra_loc[0][0]+1]
+	shoreline_std_obs[idx] = std[init_loc[0][0]:extra_loc[0][0]+1]
 	
 	omega_inst = dean_F[vec_ind_tot]
 	omega_eq = dean_eq[vec_ind_tot]

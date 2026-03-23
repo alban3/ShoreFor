@@ -4,6 +4,7 @@
 environment,
 	tabular_graphics_data
 	results_output
+	hdf5
 
 method,
   coliny_ea
@@ -27,11 +28,15 @@ model
 #    max_iterations = 100
 
 variables
-  continuous_design = 3
-    initial_point    0.0        0.1        250.0                                
-    lower_bounds    -0.01        0.005        200                                
-    upper_bounds    0.01        0.1        300                                
-    descriptors       "b"     "c"      "phi"
+  continuous_design = 2
+    initial_point    0.0        0.1                                
+    lower_bounds    -0.01        0.001                                
+    upper_bounds    0.01        0.1                                
+    descriptors       "b"     "c"
+  discrete_design_set integer = 1
+    num_set_values    50                                        
+    set_values    5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100 120 140 160 180 200 220 240 260 280 300 320 340 360 380 400 420 440 460 480 500 550 600 650 700 750 800 850 900 950 1000
+    descriptors "phi"
 
 # Run Dakota in serial launching M=8 asynchronous local jobs, which each run in
 # parallel. mpirun's -host option with a relative node list is used to land 
@@ -83,4 +88,3 @@ responses,
         interval_type central
         fd_step_size = 1.0
         no_hessians
-

@@ -69,8 +69,10 @@ def shorecore(bopti, copti, ratio_erosion, fff_minus, fff_plus,
     else:
         iif = np.max(np.where((timef <= (tfinal+deltat))
                              & (timef >= (tfinal-deltat))))
-
-    vecind = np.arange(ii0, iif+1)
+    ind0 = np.where(timef == tzero)[0][0]
+    indf = np.where(timef == tfinal)[0][0]
+    
+    vecind = np.arange(ind0, indf+1)
     time_for = [_from_ordinal((float(timef[vecind][i]))).strftime('%Y-%m-%d %H:%M:%S')
                 for i in range(len(timef[vecind]))]
 
@@ -89,7 +91,7 @@ def shorecore(bopti, copti, ratio_erosion, fff_minus, fff_plus,
 
     delta_shor = np.zeros(len(time_for))
     for i in range(len(time_for)):
-        varki = ii0 + i
+        varki = i
         iff = ((ratio_erosion*fff_minus[varki-1] + fff_plus[varki-1])
                + (ratio_erosion*fff_minus[varki] + fff_plus[varki]))/2
         delta_shor = (bopti + copti*iff) * deltat

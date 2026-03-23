@@ -25,6 +25,26 @@ def find_nearest(array, value):
     idx = (np.abs(array - value)).argmin()
     return array[idx]
 
+def find_nearest_above(array, value):
+    """
+    Find the nearest item above a value in an array
+    """
+    array = np.asarray(array)
+    array_cut = array[np.where(array >= value)[0]]
+    idx_cut = (np.abs(array_cut - value)).argmin()
+    idx_orig = np.where(array == array_cut[idx_cut])[0][0]
+   
+    return array[idx_orig]
+
+def find_nearest_below(array, value):
+    """
+    Find the nearest item below a value in an array
+    """
+    array_cut = array[np.where(array <= value)[0]]
+    idx_cut = (np.abs(array_cut - value)).argmin()
+    idx_orig = np.where(array == array_cut[idx_cut])[0][0]
+   
+    return array[idx_orig]
 
 def rmse(data, model):
     """
