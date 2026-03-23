@@ -116,10 +116,10 @@ def convertFloatYear2Date(yearFloat):
 ###############################################################################
 
 path = 'results/'
-caseList = ['shorefor_run09_duck_shoreline_b0.0055_c0.00252_phi167_no_detrend.nc', 'shorefor_run09_duck_shoreline_b0.0055_c0.00252_phi167.nc']
+caseList = ['shorefor_run02_duck_shoreline_b0.0037_c0.00632_phi231.nc', 'shorefor_run18_duck_shoreline_b0.0037_c0.00632_phi231.nc']
 colorList = ['r', 'b', 'g', 'm', 'turquoise']
 colorListOmegaEq = ['darkred', 'darkblue', 'darkgreen', 'darkmagenta', 'darkturquoise']
-nameList = ['run09 no detrend', 'run09']
+nameList = ['run02', 'run18']
 ### PLOT FIGURE ###
 
 mpl.rcParams.update({"font.size": 12})
@@ -222,4 +222,4 @@ ax12.legend(loc='best')
 ax11.legend(loc='best')
 
 #plt.show()
-fignum1.savefig(figPath + 'run09_w-o_detrend'+".png", dpi=100, format="png")
+fignum1.savefig(figPath + 'run02-18'+".png", dpi=100, format="png")
