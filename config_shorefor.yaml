@@ -22,7 +22,7 @@ input_files:
 
 # Option
 option :
-  detrend : ) #0 if you do not want to detrend F+/F- / 1 if you want to detrend F+/F-
+  detrend : 1 #0 if you do not want to detrend F+/F- / 1 if you want to detrend F+/F-
 
 # Optimization
 optimization:

@@ -49,18 +49,19 @@ def dean(hsf, tpf, fall_velocity, deltat, power, same, opti_phi, timef, time_ini
     # Forcing term, erosion or accretion
     fff = delta_omega[ind0:indf+1] * np.sqrt(power[ind0:indf+1]) / sigma_domega
     fff_plus[fff > 0] = fff[fff > 0]
-    fff_minus[fff <= 0] = fff[fff <= 0]
+    fff_minus[fff < 0] = fff[fff < 0]
     if detrend_option == 1:
-        fff_plus = detrend(fff_plus, type='linear') + np.nanmean(fff_plus)
-        fff_minus = detrend(fff_minus, type='linear') + np.nanmean(fff_minus)
+        fff_plus_detrend = detrend(fff_plus[fff_plus > 0], type='linear') + np.nanmean(fff_plus[fff_plus > 0])
+        fff_minus_detrend = detrend(fff_minus[fff_minus <= 0], type='linear') + np.nanmean(fff_minus[fff_minus <= 0])
     else:
-        pass
+        fff_plus_detrend = fff_plus
+        fff_minus_detrend = fff_minus
 
     # Calculate mean value of fff_plus and fff_minus for every survey time interval
     indr = np.arange(same[0], same[-1]+1)
-    ratio_erosion = np.absolute(np.nansum(fff_plus)
+    ratio_erosion = np.absolute(np.nansum(fff_plus_detrend)
                                 /
-                                np.nansum(fff_minus))
+                                np.nansum(fff_minus_detrend))
     print('erosion ratio', ratio_erosion)
     
     '''mff_pl = np.zeros(len(timef))
