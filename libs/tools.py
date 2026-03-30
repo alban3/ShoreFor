@@ -40,6 +40,7 @@ def find_nearest_below(array, value):
     """
     Find the nearest item below a value in an array
     """
+    array = np.asarray(array)
     array_cut = array[np.where(array <= value)[0]]
     idx_cut = (np.abs(array_cut - value)).argmin()
     idx_orig = np.where(array == array_cut[idx_cut])[0][0]

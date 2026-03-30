@@ -7,6 +7,8 @@ Author: Alexandre Paris
 
 import yaml
 from dates_functions import datenum
+import numpy as np
+from tools import find_nearest, find_nearest_above, find_nearest_below, match
 
 
 def config():
@@ -38,15 +40,18 @@ def config():
     c_max = clef['dakota_params']['c_max']
     phi_min = clef['dakota_params']['phi_min']
     phi_max = clef['dakota_params']['phi_max']
+    
     # Calculate the initial parameters from previous limits
     b_init = round(((b_max - b_min)/2)+b_min, 1)
     c_init = round(((c_max - c_min)/2)+c_min, 1)
-    #phi_init = round(((phi_max - phi_min)/2)+phi_min, 1)
+    
     phi_ranges = (
-            [x for x in range(phi_min, 100, 5)]
+            [x for x in range(5, 100, 5)]
              +[x for x in range(100, 500, 20)]
-            + [x for x in range(500, phi_max+50, 50)]
+            + [x for x in range(500, 1050, 50)]
         )
+    phi_ranges = phi_ranges[np.where(phi_ranges == find_nearest_above(phi_ranges,phi_min))[0][0]:np.where(phi_ranges == find_nearest_below(phi_ranges,phi_max))[0][0]+1]
+
     # Times for calibration
     time_init = datenum(clef['calibration']['time_initial'])
     time_fin = datenum(clef['calibration']['time_final'])
@@ -68,7 +73,7 @@ def config():
     else:
         fut = False
     
-    with open('./dakota_pstudy.in', 'r') as file:
+    '''with open('./dakota_pstudy.in', 'r') as file:
         get_all = file.readlines()
     
     with open('./dakota_pstudy.in', 'w') as file:
@@ -82,23 +87,18 @@ def config():
             elif 'upper_bounds' in line:
                 file.writelines('    upper_bounds    {}        {}\
                                 \n'.format(b_max, c_max))
-            elif 'num_set_values' in line:
-                file.writelines('    num_set_values    {}        \
-                                \n'.format(len(phi_ranges)))
-            elif 'set_values' in line:
-                file.writelines('    set_values    ')
-                phi_ranges_to_write = ' '.join(str(j) for j in phi_ranges)
-                file.writelines(phi_ranges_to_write)
-                file.writelines('\n')
+            elif 'initial_state' in line:
+                file.writelines('    initial_state    {}        \
+                                \n'.format(phi_val))
             else:
                 file.writelines(line)
     
     with open('parameters.txt.template', 'w') as file:
-        lines = ['# b c phi\n',
-                 '{} {} {} #min\n'.format(b_min, c_min, phi_min),
-                 '{} {} {} #max\n'.format(b_max, c_max, phi_max),
-                 '{b} {c} {phi} #start\n']
-        file.writelines(lines)
+        lines = ['# b c \n',
+                 '{} {} #min\n'.format(b_min, c_min),
+                 '{} {} #max\n'.format(b_max, c_max),
+                 '{b} {c} #start\n']
+        file.writelines(lines)'''
     
     return (shor_file, for_file, fut, tzero_future, tfin_future,
-            time_init, time_fin, case_na, evolut, detrend)
+            time_init, time_fin, case_na, evolut, detrend, phi_ranges)

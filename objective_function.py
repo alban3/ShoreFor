@@ -93,21 +93,25 @@ def open_files():
     time_final = datenum(cl['calibration']['time_final'])
     detrend_option = cl['option']['detrend']
     evol = cl['case']['evolution']
+   
+        
     if evol == 1:
         evolution = 'shoreline'
     elif evol == 2:
         evolution = 'bars'
-    return shoreline_file, forcing_file, time_initial, time_final, evolution, detrend_option
+    return shoreline_file, forcing_file, time_initial, time_final, evolution, detrend_option,
 
 
 ###############################################################################
 # Reading .dat files with forcing and shoreline data
 shoreline_file, forcing_file, time_initial, time_final, evolution, detrend_option = open_files()
+
 # Reading the parameters for the optimization
 inputs = np.loadtxt('parameters.txt')
 b_opti = inputs[2, 0]
 c_opti = inputs[2, 1]
 phi_opti = inputs[2, 2]
+
 print(b_opti, c_opti, phi_opti)
 
 (time_S, time_Sy, loc_init, loc_extra,

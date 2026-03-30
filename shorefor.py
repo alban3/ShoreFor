@@ -35,9 +35,10 @@ from configuration import config
 ###############################################################################
 
 (shoreline_file, forcing_file, future, tzero_fut,
- tfin_fut, time_initial, time_final, case_name, evolution, detrend_option) = config()
+ tfin_fut, time_initial, time_final, case_name, evolution, detrend_option, phi_ranges) = config()
 
-opti_b, opti_c, opti_phi = optimization()
+for phi in phi_ranges:
+	opti_b, opti_c, opti_phi = optimization(phi)
 
 (time_S, time_Sy, loc_init, loc_extra,
  time_F, dt, ii0, iif, vecind, same,

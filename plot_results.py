@@ -116,10 +116,11 @@ def convertFloatYear2Date(yearFloat):
 ###############################################################################
 
 path = 'results/'
-caseList = ['shorefor_run09_duck_shoreline_b0.0055_c0.00252_phi167_no_detrend.nc', 'shorefor_run09_duck_shoreline_b0.0055_c0.00252_phi167.nc']
+caseList = ['shorefor_run18_duck_shoreline_b0.00465_c0.004042_phi140.0.nc', 'shorefor_run26_duck_shoreline_b0.006029_c0.001287_phi160.0.nc', 
+			'shorefor_run28_duck_shoreline_b0.006481_c0.00212_phi160.0.nc','shorefor_run29_duck_shoreline_b0.005588_c0.002548_phi160.0.nc','shorefor_run27_duck_shoreline_b0.005588_c0.002548_phi160.0.nc']
 colorList = ['r', 'b', 'g', 'm', 'turquoise']
 colorListOmegaEq = ['darkred', 'darkblue', 'darkgreen', 'darkmagenta', 'darkturquoise']
-nameList = ['run09 no detrend', 'run09']
+nameList = [r'pop size = 1000', r'pop size = 2000', r'pop size = 3000', r'pop size = 4000', r'pop size = 5000']
 ### PLOT FIGURE ###
 
 mpl.rcParams.update({"font.size": 12})
@@ -218,8 +219,8 @@ ax12.scatter(dateShorelineSplinterDigit, ShorelineSplinterDigit, s = 15, color =
 ax12.plot(dateShorelineSplinterModelDigit, ShorelineModelSplinterDigit, lw = 1 , color = 'k', label = 'Splinter model')
 
 
-ax12.legend(loc='best')
+#ax12.legend(loc='best')
 ax11.legend(loc='best')
 
 #plt.show()
-fignum1.savefig(figPath + 'run09_w-o_detrend'+".png", dpi=100, format="png")
+fignum1.savefig(figPath + 'run_18-26-27-28-29'+".png", dpi=100, format="png")
