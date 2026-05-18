@@ -15,7 +15,7 @@ import os
 #import subprocess
 #import yaml
 #import pandas
-#import numpy as np
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas
@@ -23,7 +23,7 @@ from matplotlib import dates
 
 sys.path.append('./libs')
 from dates_functions import _from_ordinal, datenum
-from tools import match, find_nearest, rmse, bss
+from tools import match, find_nearest, rmse, bss, mielke
 from optimization import optimization
 from read_files import reading_files
 from dean import dean
@@ -101,8 +101,7 @@ if future == True:
     # Fills series with NaN
     calib_shoreline = shoreline_calib.tolist() + ['NaN']*len(time_Fy_f)
     future_shoreline = ['NaN']*len(time_Fy_c) + shoreline_future.tolist()
-    vec_ind_c = vec_ind_c + vec_ind_f
-
+    vec_ind_c = np.concatenate([vec_ind_c, vec_ind_f])
 else:
     general_time = time_Fy_c
     calib_shoreline = shoreline_calib.tolist()

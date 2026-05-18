@@ -41,12 +41,8 @@ def config():
     # Calculate the initial parameters from previous limits
     b_init = round(((b_max - b_min)/2)+b_min, 1)
     c_init = round(((c_max - c_min)/2)+c_min, 1)
-    #phi_init = round(((phi_max - phi_min)/2)+phi_min, 1)
-    phi_ranges = (
-            [x for x in range(phi_min, 100, 5)]
-             +[x for x in range(100, 500, 20)]
-            + [x for x in range(500, phi_max+50, 50)]
-        )
+    phi_init = round(((phi_max - phi_min)/2)+phi_min, 1)
+
     # Times for calibration
     time_init = datenum(clef['calibration']['time_initial'])
     time_fin = datenum(clef['calibration']['time_final'])
@@ -74,22 +70,14 @@ def config():
     with open('./dakota_pstudy.in', 'w') as file:
         for i, line in enumerate(get_all, 1):
             if 'initial_point' in line:
-                file.writelines('    initial_point    {}        {}\
-                                \n'.format(b_init, c_init))
+                file.writelines('    initial_point    {}        {}        {}\
+                                \n'.format(b_init, c_init, phi_init))
             elif 'lower_bounds' in line:
-                file.writelines('    lower_bounds    {}        {}\
-                                \n'.format(b_min, c_min))
+                file.writelines('    lower_bounds    {}        {}        {}\
+                                \n'.format(b_min, c_min, phi_min))
             elif 'upper_bounds' in line:
-                file.writelines('    upper_bounds    {}        {}\
-                                \n'.format(b_max, c_max))
-            elif 'num_set_values' in line:
-                file.writelines('    num_set_values    {}        \
-                                \n'.format(len(phi_ranges)))
-            elif 'set_values' in line:
-                file.writelines('    set_values    ')
-                phi_ranges_to_write = ' '.join(str(j) for j in phi_ranges)
-                file.writelines(phi_ranges_to_write)
-                file.writelines('\n')
+                file.writelines('    upper_bounds    {}        {}        {}\
+                                \n'.format(b_max, c_max, phi_max))
             else:
                 file.writelines(line)
     

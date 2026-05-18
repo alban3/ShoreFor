@@ -23,7 +23,7 @@ import pandas
 
 sys.path.append('../libs')
 from dates_functions import _from_ordinal, datenum
-from tools import match, rmse, nmse, bss
+from tools import match, rmse, nmse, bss, mielke
 from constants import GAMMA, G, RHO, DEIL, NU, D50
 from read_files import reading_files
 from dean import dean
@@ -82,6 +82,15 @@ def nmse_shoreline(coef_b, coef_c, dt_time_survey):
 
     return nmse(XS, shoreline_calib)
 
+def mielke_shoreline(coef_b, coef_c, dt_time_survey):
+    """
+    Calculates the Mielke Index
+    """
+    for line, delta_t in enumerate(dt_time_survey):
+        delta_s[line] = (coef_c*(erosion_ratio*FF_mi[line]
+                         + FF_pl[line])) + coef_b * delta_t
+        shoreline_calib[line+1] = shoreline_calib[line] + delta_s[line]
+    return mielke(XS, shoreline_calib)
 
 def open_files():
     with open(r'../config_shorefor.yaml') as file:
@@ -146,7 +155,7 @@ data = [shoreline_calib[i] for i in time_match_obs_in_data]
 obs = [XS[i] for i in time_match_data_in_obs]
 
 RMSE = rmse(np.array(data), np.array(obs))
-
+#MIELKE = mielke(np.array(data), np.array(obs))
 #with open('nmse.txt', 'w') as f:
 #    f.write(repr(NMSE) + '   NMSE ')
 
@@ -159,3 +168,4 @@ RMSE = rmse(np.array(data), np.array(obs))
 with open('results.txt', 'w') as f:
 	f.write(repr(RMSE) + '   RMSE \n')
 	#f.write(repr(BSS) + '   BSS ')
+	#f.write(repr(MIELKE) + '   MIELKE ')

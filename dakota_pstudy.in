@@ -4,11 +4,10 @@
 environment,
 	tabular_graphics_data
 	results_output
-	hdf5
 
 method,
   coliny_ea
-    max_iterations = 1000
+    max_iterations = 100
     max_function_evaluations = 10000
     seed = 11011011
     population_size = 10000
@@ -16,9 +15,9 @@ method,
     mutation_type offset_normal
     mutation_rate 1.0
     crossover_type two_point
-    crossover_rate 0.0
-    replacement_type chc = 10
-    #solution_target = 0.1
+    crossover_rate 0.8
+    replacement_type chc = 200
+	solution_target = 0.1
 
 model
   single
@@ -28,15 +27,11 @@ model
 #    max_iterations = 100
 
 variables
-  continuous_design = 2
-    initial_point    0.0        0.1                                
-    lower_bounds    -0.01        0.001                                
-    upper_bounds    0.01        0.1                                
-    descriptors       "b"     "c"
-  discrete_design_set integer = 1
-    num_set_values    50                                        
-    set_values    5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100 120 140 160 180 200 220 240 260 280 300 320 340 360 380 400 420 440 460 480 500 550 600 650 700 750 800 850 900 950 1000
-    descriptors "phi"
+  continuous_design = 3
+    initial_point    0.0        0.1        250.0                                
+    lower_bounds    -0.01        0.0        100                                
+    upper_bounds    0.01        0.1        400                                
+    descriptors       "b"     "c"           "phi"
 
 # Run Dakota in serial launching M=8 asynchronous local jobs, which each run in
 # parallel. mpirun's -host option with a relative node list is used to land 
@@ -79,7 +74,7 @@ interface,
             directory_tag directory_save
 
 responses,
-	descriptors 'RMSE' #'BSS'
+	descriptors 'RMSE' #'BSS' 'mielke' 'RMSE'
 	objective_functions 1
 	#num_objective_functions = 1
 	#descriptors 'RMSE'

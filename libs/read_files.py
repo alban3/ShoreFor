@@ -31,8 +31,9 @@ def reading_files(file_forcing, file_shoreline, init_c, init_f):
     #shoreline_data = pandas.DataFrame(data=shoreline_data).replace('NaN', np.nan).dropna().to_numpy()
 
     shoreline_ncFile = Dataset(file_shoreline)
-    data = shoreline_ncFile.variables['s'][:]
-    data_std = shoreline_ncFile.variables['sstd'][:]
+    data = shoreline_ncFile.variables['s']
+    #data_std = shoreline_ncFile.variables['sstd'][:]
+    data_std = np.zeros(len(data))
     times = np.round(shoreline_ncFile.variables['date'][:],0)
     shoreline_ncFile.close()
     

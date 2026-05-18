@@ -82,3 +82,18 @@ def bss(data, model, b):
         value = float(1)
         print('WARNING: negative BSS')
     return 1/value
+
+def mielke(data, model):
+    """
+    Calculates the Mielke Index
+    
+    WARNING: this function is only used by Dakota to optimize the
+    parameters b and c. However, Dakota will look for the min value
+    of Mielke, so here 1/value is return to avoid Dakota selecting the
+    worse BSS (negative value) as the best.
+    """
+    value = 1 - np.nanmean((data - model)**2)/(np.nanmean(data**2) + np.nanmean(model**2) + (np.nanmean(data) - np.nanmean(model))**2)
+    if value < 0:
+        value = float(1)
+        print('WARNING: negative Mielke')
+    return 1/value

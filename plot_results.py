@@ -116,10 +116,10 @@ def convertFloatYear2Date(yearFloat):
 ###############################################################################
 
 path = 'results/'
-caseList = ['shorefor_run02_duck_shoreline_b0.0037_c0.00632_phi231.nc', 'shorefor_run18_duck_shoreline_b0.0037_c0.00632_phi231.nc']
+caseList = ['shorefor_ar_shoreline_b0.005650643425_c0.001820211439_phi376.8809814.nc']
 colorList = ['r', 'b', 'g', 'm', 'turquoise']
 colorListOmegaEq = ['darkred', 'darkblue', 'darkgreen', 'darkmagenta', 'darkturquoise']
-nameList = ['run02', 'run18']
+nameList = ['Lonely bar']
 ### PLOT FIGURE ###
 
 mpl.rcParams.update({"font.size": 12})
@@ -195,7 +195,7 @@ ax12.set_xlim(_from_ordinal(time_num[0]),_from_ordinal(time_num[-1]))
 
 ### Add Splinter plot Digit ###
 
-pathResultSplinterDigit = 'examples/'
+'''pathResultSplinterDigit = 'examples/'
 timeShorelineSplinterDigit, ShorelineSplinterDigit = np.loadtxt(pathResultSplinterDigit+'shoreline_measure.csv', delimiter='\t',usecols=(0, 1),unpack=True)
 timeShorelineSplinterModelDigit, ShorelineModelSplinterDigit = np.loadtxt(pathResultSplinterDigit+'shoreline_model.csv', delimiter='\t',usecols=(0, 1),unpack=True)
 
@@ -215,11 +215,11 @@ dateShorelineSplinterModelDigit = [_from_ordinal(datenum(dateShorelineSplinterMo
 offset = s_obs[1] - ShorelineSplinterDigit[0]
 
 ax12.scatter(dateShorelineSplinterDigit, ShorelineSplinterDigit, s = 15, color = 'k', marker = 'o', facecolors = 'None', label = 'Splinter measure')
-ax12.plot(dateShorelineSplinterModelDigit, ShorelineModelSplinterDigit, lw = 1 , color = 'k', label = 'Splinter model')
+ax12.plot(dateShorelineSplinterModelDigit, ShorelineModelSplinterDigit, lw = 1 , color = 'k', label = 'Splinter model')'''
 
 
 ax12.legend(loc='best')
 ax11.legend(loc='best')
 
 #plt.show()
-fignum1.savefig(figPath + 'run02-18'+".png", dpi=100, format="png")
+fignum1.savefig(figPath + 'LonelyBar'+".png", dpi=100, format="png")
