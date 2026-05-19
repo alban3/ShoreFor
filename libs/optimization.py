@@ -14,7 +14,7 @@ import os
 import yaml
 import subprocess
 import numpy as np
-
+import objective_functions
 
 def optimization(phi):
     """
@@ -35,41 +35,14 @@ def optimization(phi):
     c_init = round(((c_max - c_min)/2)+c_min, 1)
     if phi == phi_min:
         try : 
-            os.remove('dakota_tab_results'+run+'.dat')
+            os.remove('scipy_tab_results'+run+'.dat')
         except FileNotFoundError:
             pass
     else:
         pass
-    
-    with open('./dakota_pstudy.in', 'r') as file:
-        get_all = file.readlines()
-    
-    with open('./dakota_pstudy.in', 'w') as file:
-        for i, line in enumerate(get_all, 1):
-            if 'initial_point' in line:
-                file.writelines('    initial_point    {}        {}\
-                                \n'.format(b_init, c_init))
-            elif 'lower_bounds' in line:
-                file.writelines('    lower_bounds    {}        {}\
-                                \n'.format(b_min, c_min))
-            elif 'upper_bounds' in line:
-                file.writelines('    upper_bounds    {}        {}\
-                                \n'.format(b_max, c_max))
-            elif 'initial_state' in line:
-                file.writelines('    initial_state    {}        \
-                                \n'.format(phi))
-            else:
-                file.writelines(line)
-    
-    with open('parameters.txt.template', 'w') as file:
-        lines = ['# b c phi \n',
-                 '{} {} {} #min\n'.format(b_min, c_min, phi),
-                 '{} {} {} #max\n'.format(b_max, c_max, phi),
-                 '{b} {c} {phi} #start\n']
-        file.writelines(lines)
-    
+        
     if opti == 1:
-        with subprocess.Popen(['dakota', '-i', 'dakota_pstudy.in']) as process:
+        with subprocess.Popen(['python', 'objective_function.py']) as process:
             process.wait()
 
         # Best RMSE and BSS
@@ -79,32 +52,36 @@ def optimization(phi):
             copti = float(params[1])
             phiopti = float(params[2])'''
         
-        data = np.genfromtxt('dakota_tabular.dat')
+        data = np.genfromtxt('scipy_tabular.dat')
         data = data[1:]
         b = data[:, 2]
-        c = data[:, 3]
-        phi = data[:, 4]
-        rmse = data[:, 5]
+        cp = data[:, 3]
+        cm = data[:, 4]
+        phi = data[:, 5]
+        rmse = data[:, 6]
         
         try:
-            with open('dakota_tab_results'+run+'.dat', 'x') as file:
+            with open('scipy_tab_results'+run+'.dat', 'x') as file:
                 pass
-            np.savetxt('dakota_tab_results'+run+'.dat', np.c_[b, c, phi, rmse], fmt='%.6f')
+            np.savetxt('scipy_tab_results'+run+'.dat', np.c_[b, cp, cm, phi, rmse], fmt='%.6f')
             idx = np.argmin(rmse)
             bopti = b[idx]
-            copti = c[idx]
+            cpopti = cp[idx]
+            cmopti = cm[idx]
             phiopti = phi[idx]
             print('file do not exist')
         except FileExistsError:
-            data_final = np.genfromtxt('dakota_tab_results'+run+'.dat')
+            data_final = np.genfromtxt('scipy_tab_results'+run+'.dat')
             b_saved = np.concatenate((data_final[:, 0], b))
-            c_saved = np.concatenate((data_final[:, 1], c))
-            phi_saved = np.concatenate((data_final[:, 2], phi))
-            rmse_saved = np.concatenate((data_final[:, 3], rmse))   
-            np.savetxt('dakota_tab_results'+run+'.dat', np.c_[b_saved, c_saved, phi_saved, rmse_saved], fmt='%.6f')
+            cp_saved = np.concatenate((data_final[:, 1], cp))
+            cm_saved = np.concatenate((data_final[:, 2], cm))
+            phi_saved = np.concatenate((data_final[:, 3], phi))
+            rmse_saved = np.concatenate((data_final[:, 4], rmse))   
+            np.savetxt('scipy_tab_results'+run+'.dat', np.c_[b_saved, cp_saved, cm_saved, phi_saved, rmse_saved], fmt='%.6f')
             idx = np.argmin(rmse_saved)
             bopti = b_saved[idx]
-            copti = c_saved[idx]
+            cpopti = cp_saved[idx]
+            cmopti = cm_saved[idx]
             phiopti = phi_saved[idx]
             print('file exist')
  
@@ -112,16 +89,18 @@ def optimization(phi):
 		
         print('Otimized coefficients:\n')
         print('b: ', bopti)
-        print('c: ', copti)
+        print('cp: ', cpopti)
+        print('cm: ', cmopti)
         print('phi: ', phiopti)
     
     elif opti == 2:
         bopti = clef['optimization']['b']
-        copti = clef['optimization']['c']
+        cpopti = clef['optimization']['cp']
+        cmopti = clef['optimization']['cm']
         phiopti = clef['optimization']['phi']
     
     else:
         print('ERROR: Optimization choice in the configuration file is not recognized')
         sys.exit()
 
-    return bopti, copti, phiopti
+    return bopti, cpopti, cmopti, phiopti

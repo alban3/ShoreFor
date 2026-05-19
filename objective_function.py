@@ -20,6 +20,7 @@ import datetime
 import yaml
 import numpy as np
 import pandas
+from scipy.optimize import curve_fit
 
 sys.path.append('../libs')
 from dates_functions import _from_ordinal, datenum
@@ -29,6 +30,13 @@ from read_files import reading_files
 from dean import dean
 from shorecore import shorecore
 
+def func(X, b, cp, cm):
+	fff, dt = X
+	fff_plus[fff > 0] = fff[fff > 0]
+    fff_minus[fff < 0] = fff[fff < 0]
+    fffp = detrend(fff_plus[fff_plus > 0], type='linear') + np.nanmean(fff_plus[fff_plus > 0])
+    fffm = detrend(fff_minus[fff_minus <= 0], type='linear') + np.nanmean(fff_minus[fff_minus <= 0])
+	return ( b + cp * fffp + cm * fffm ) * dt 
 
 def bss_shoreline(coef_b, coef_c, dt_time_survey):
     """
@@ -124,6 +132,9 @@ print(b_opti, c_opti, phi_opti)
 erosion_ratio, FF_mi, FF_pl, omega_F, omega_eq = dean(hsf, tpf, fall_velocity,
 													  dt, power, same,
 													  phi_opti, time_F, time_initial, time_final, detrend_option)
+
+X = (FF_mi +  FF_pl, dt)
+popt, pcov = curve_fit(func, X, np.diff(XS), bounds=([bmin, cpmin, cmmin], [bmax, cpmax, cpmin]))
 
 shoreline_calib, time_Fy_c, vec_ind_c = shorecore(b_opti,
 												  c_opti,
